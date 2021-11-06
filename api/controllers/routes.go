@@ -42,6 +42,14 @@ func (s *Server) initializeRoutes() {
 	s.Router.HandleFunc("/jadwal/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthenticationPenyuluh(s.UpdateUser))).Methods("PUT")
 	s.Router.HandleFunc("/jadwal/{id}", middlewares.SetMiddlewareAuthenticationPenyuluh(s.DeleteUser)).Methods("DELETE")
 
+	//laporan routes
+	s.Router.HandleFunc("/laporan", middlewares.SetMiddlewareJSON(s.CreateLaporan)).Methods("POST")
+	// s.Router.HandleFunc("/laporan", middlewares.SetMiddlewareJSON(s.GetLaporans)).Methods("GET")
+	// s.Router.HandleFunc("/laporan", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthenticationPenyuluh(s.GetLaporans))).Methods("GET")
+	s.Router.HandleFunc("/laporan/{id}", middlewares.SetMiddlewareJSON(s.GetLaporan)).Methods("GET")
+	s.Router.HandleFunc("/laporan/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthenticationPenyuluh(s.UpdateUser))).Methods("PUT")
+	s.Router.HandleFunc("/laporan/{id}", middlewares.SetMiddlewareAuthenticationPenyuluh(s.DeleteUser)).Methods("DELETE")
+
 	// //Users routes
 	// s.Router.HandleFunc("/users", middlewares.SetMiddlewareJSON(s.CreateUser)).Methods("POST")
 	s.Router.HandleFunc("/users", middlewares.SetMiddlewareJSON(s.GetUsers)).Methods("GET")

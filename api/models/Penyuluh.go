@@ -97,7 +97,7 @@ func (u *Penyuluh) SavePenyuluh(db *gorm.DB) (*Penyuluh, error) {
 func (u *Penyuluh) FindAllPenyuluhs(db *gorm.DB) (*[]Penyuluh, error) {
 	var err error
 	Penyuluhs := []Penyuluh{}
-	err = db.Debug().Model(&Penyuluh{}).Limit(100).Preload("User").Preload("Jadwals").Find(&Penyuluhs).Error
+	err = db.Debug().Model(&Penyuluh{}).Limit(100).Preload("User").Preload("Jadwals.Laporan").Find(&Penyuluhs).Error
 	if err != nil {
 		return &[]Penyuluh{}, err
 	}

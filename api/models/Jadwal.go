@@ -16,6 +16,7 @@ type Jadwal struct {
 	Lokasi     string    `json:"lokasi"`
 	PenyuluhID uint32
 	MajelisID  uint32
+	Laporan    Laporan
 	CreatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
@@ -61,7 +62,7 @@ func (p *Jadwal) SaveJadwal(db *gorm.DB) (*Jadwal, error) {
 func (p *Jadwal) FindAllJadwal(db *gorm.DB) (*[]Jadwal, error) {
 	var err error
 	Jadwals := []Jadwal{}
-	err = db.Debug().Model(&Jadwal{}).Limit(100).Find(&Jadwals).Error
+	err = db.Debug().Model(&Jadwal{}).Limit(100).Preload("Laporan").Find(&Jadwals).Error
 	if err != nil {
 		return &[]Jadwal{}, err
 	}
