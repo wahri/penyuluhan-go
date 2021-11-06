@@ -31,7 +31,7 @@ func SetMiddlewareAuthenticationAdmin(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func SetMiddlewareAuthenticationPenyuluh(next http.HandlerFunc) http.HandlerFunc {
+func SetMiddlewareAuthentication(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := auth.TokenValid(r)
 		if err != nil {

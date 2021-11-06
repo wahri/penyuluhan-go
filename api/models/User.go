@@ -47,6 +47,12 @@ func (u *User) Prepare() {
 
 func (u *User) Validate(action string) error {
 	switch strings.ToLower(action) {
+	case "change_password":
+		if u.Password == "" {
+			return errors.New("Required Password")
+		}
+
+		return nil
 	case "update":
 		if u.Username == "" {
 			return errors.New("Required Username")
@@ -103,6 +109,30 @@ func (u *User) FindUserByID(db *gorm.DB, uid uint32) (*User, error) {
 		return &User{}, errors.New("User Not Found")
 	}
 	return u, err
+}
+
+func (u *User) ChangePassword(db *gorm.DB, uid uint32) (*User, error) {
+
+	// To hash the password
+	err := u.BeforeSave()
+	if err != nil {
+		log.Fatal(err)
+	}
+	db = db.Debug().Model(&User{}).Where("id = ?", uid).Take(&User{}).UpdateColumns(
+		map[string]interface{}{
+			"password":   u.Password,
+			"updated_at": time.Now(),
+		},
+	)
+	if db.Error != nil {
+		return &User{}, db.Error
+	}
+	// This is the display the updated user
+	err = db.Debug().Model(&User{}).Where("id = ?", uid).Take(&u).Error
+	if err != nil {
+		return &User{}, err
+	}
+	return u, nil
 }
 
 func (u *User) UpdateAUser(db *gorm.DB, uid uint32) (*User, error) {
