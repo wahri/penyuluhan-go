@@ -59,27 +59,38 @@ func (server *Server) GetAdmins(w http.ResponseWriter, r *http.Request) {
 	responses.JSON(w, http.StatusOK, admins)
 }
 
-// func (server *Server) GetUser(w http.ResponseWriter, r *http.Request) {
+func (server *Server) GetAdmin(w http.ResponseWriter, r *http.Request) {
 
-// 	vars := mux.Vars(r)
-// 	uid, err := strconv.ParseUint(vars["id"], 10, 32)
-// 	if err != nil {
-// 		responses.ERROR(w, http.StatusBadRequest, err)
-// 		return
-// 	}
-// 	user := models.User{}
-// 	userGotten, err := user.FindUserByID(server.DB, uint32(uid))
-// 	if err != nil {
-// 		responses.ERROR(w, http.StatusBadRequest, err)
-// 		return
-// 	}
-// 	responses.JSON(w, http.StatusOK, userGotten)
-// }
+	vars := mux.Vars(r)
+	uid, err := strconv.ParseUint(vars["id"], 10, 32)
+	if err != nil {
+		responses.ERROR(w, http.StatusBadRequest, err)
+		return
+	}
+	Admin := models.Admin{}
+	AdminGotten, err := Admin.FindAdminByID(server.DB, uint32(uid))
+	if err != nil {
+		responses.ERROR(w, http.StatusBadRequest, err)
+		return
+	}
+	responses.JSON(w, http.StatusOK, AdminGotten)
+}
 
 func (server *Server) UpdateAdmin(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	uid, err := strconv.ParseUint(vars["id"], 10, 32)
+
+	tokenID, err := auth.ExtractTokenID(r)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
+		return
+	}
+	if tokenID != uint32(uid) {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New(http.StatusText(http.StatusUnauthorized)))
+		return
+	}
+
 	cekAdmin, _ := auth.CekAdmin(r)
 	if cekAdmin != 1 {
 		responses.ERROR(w, http.StatusUnauthorized, errors.New("you dont have access"))
@@ -98,15 +109,6 @@ func (server *Server) UpdateAdmin(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, &admin)
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
-		return
-	}
-	tokenID, err := auth.ExtractTokenID(r)
-	if err != nil {
-		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
-		return
-	}
-	if tokenID != uint32(uid) {
-		responses.ERROR(w, http.StatusUnauthorized, errors.New(http.StatusText(http.StatusUnauthorized)))
 		return
 	}
 	admin.Prepare()

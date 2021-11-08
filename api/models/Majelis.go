@@ -49,7 +49,7 @@ func (p *Majelis) SaveMajelis(db *gorm.DB) (*Majelis, error) {
 func (p *Majelis) FindAllMajelis(db *gorm.DB) (*[]Majelis, error) {
 	var err error
 	Majeliss := []Majelis{}
-	err = db.Debug().Model(&Majelis{}).Limit(100).Preload("Jadwals").Find(&Majeliss).Error
+	err = db.Debug().Model(&Majelis{}).Limit(100).Preload("Jadwals.Laporan").Find(&Majeliss).Error
 	if err != nil {
 		return &[]Majelis{}, err
 	}
@@ -58,7 +58,7 @@ func (p *Majelis) FindAllMajelis(db *gorm.DB) (*[]Majelis, error) {
 
 func (p *Majelis) FindMajelisByID(db *gorm.DB, pid uint32) (*Majelis, error) {
 	var err error
-	err = db.Debug().Model(&Majelis{}).Where("id = ?", pid).Take(&p).Error
+	err = db.Debug().Model(&Majelis{}).Preload("Jadwals.Laporan").Where("id = ?", pid).Take(&p).Error
 	if err != nil {
 		return &Majelis{}, err
 	}

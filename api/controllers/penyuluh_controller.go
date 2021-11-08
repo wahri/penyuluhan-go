@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"penyuluhan2/api/models"
 	"penyuluhan2/api/responses"
 	"penyuluhan2/api/utils/formaterror"
+
+	"github.com/gorilla/mux"
 )
 
 func (server *Server) CreatePenyuluh(w http.ResponseWriter, r *http.Request) {
@@ -54,22 +57,22 @@ func (server *Server) GetPenyuluhs(w http.ResponseWriter, r *http.Request) {
 	responses.JSON(w, http.StatusOK, Penyuluhs)
 }
 
-// func (server *Server) GetUser(w http.ResponseWriter, r *http.Request) {
+func (server *Server) GetPenyuluh(w http.ResponseWriter, r *http.Request) {
 
-// 	vars := mux.Vars(r)
-// 	uid, err := strconv.ParseUint(vars["id"], 10, 32)
-// 	if err != nil {
-// 		responses.ERROR(w, http.StatusBadRequest, err)
-// 		return
-// 	}
-// 	user := models.User{}
-// 	userGotten, err := user.FindUserByID(server.DB, uint32(uid))
-// 	if err != nil {
-// 		responses.ERROR(w, http.StatusBadRequest, err)
-// 		return
-// 	}
-// 	responses.JSON(w, http.StatusOK, userGotten)
-// }
+	vars := mux.Vars(r)
+	uid, err := strconv.ParseUint(vars["id"], 10, 32)
+	if err != nil {
+		responses.ERROR(w, http.StatusBadRequest, err)
+		return
+	}
+	Penyuluh := models.Penyuluh{}
+	PenyuluhGotten, err := Penyuluh.FindPenyuluhByID(server.DB, uint32(uid))
+	if err != nil {
+		responses.ERROR(w, http.StatusBadRequest, err)
+		return
+	}
+	responses.JSON(w, http.StatusOK, PenyuluhGotten)
+}
 
 // func (server *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 

@@ -101,7 +101,7 @@ func (u *Admin) FindAllAdmins(db *gorm.DB) (*[]Admin, error) {
 
 func (u *Admin) FindAdminByID(db *gorm.DB, uid uint32) (*Admin, error) {
 	var err error
-	err = db.Debug().Model(Admin{}).Where("id = ?", uid).Take(&u).Error
+	err = db.Debug().Model(Admin{}).Preload("User").Where("id = ?", uid).Take(&u).Error
 	if err != nil {
 		return &Admin{}, err
 	}

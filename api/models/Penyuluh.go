@@ -106,7 +106,7 @@ func (u *Penyuluh) FindAllPenyuluhs(db *gorm.DB) (*[]Penyuluh, error) {
 
 func (u *Penyuluh) FindPenyuluhByID(db *gorm.DB, uid uint32) (*Penyuluh, error) {
 	var err error
-	err = db.Debug().Model(Penyuluh{}).Where("id = ?", uid).Take(&u).Error
+	err = db.Debug().Model(Penyuluh{}).Preload("User").Preload("Jadwals.Laporan").Where("id = ?", uid).Take(&u).Error
 	if err != nil {
 		return &Penyuluh{}, err
 	}

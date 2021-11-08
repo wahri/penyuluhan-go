@@ -13,18 +13,18 @@ func (s *Server) initializeRoutes() {
 	//Admins routes
 	s.Router.HandleFunc("/admin", middlewares.SetMiddlewareJSON(s.CreateAdmin)).Methods("POST")
 	// s.Router.HandleFunc("/admin", middlewares.SetMiddlewareJSON(s.GetAdmins)).Methods("GET")
-	s.Router.HandleFunc("/admin", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.GetAdmins))).Methods("GET")
-	s.Router.HandleFunc("/admin/{id}", middlewares.SetMiddlewareJSON(s.GetUser)).Methods("GET")
-	s.Router.HandleFunc("/admin/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.UpdateAdmin))).Methods("PUT")
-	s.Router.HandleFunc("/admin/{id}", middlewares.SetMiddlewareAuthentication(s.DeleteUser)).Methods("DELETE")
+	s.Router.HandleFunc("/admin", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthenticationAdmin(s.GetAdmins))).Methods("GET")
+	s.Router.HandleFunc("/admin/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthenticationAdmin(s.GetAdmin))).Methods("GET")
+	s.Router.HandleFunc("/admin/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthenticationAdmin(s.UpdateAdmin))).Methods("PUT")
+	s.Router.HandleFunc("/admin/{id}", middlewares.SetMiddlewareAuthentication(middlewares.SetMiddlewareAuthenticationAdmin(s.DeleteUser))).Methods("DELETE")
 
 	//Penyuluh routes
 	s.Router.HandleFunc("/penyuluh", middlewares.SetMiddlewareJSON(s.CreatePenyuluh)).Methods("POST")
 	s.Router.HandleFunc("/penyuluh", middlewares.SetMiddlewareJSON(s.GetPenyuluhs)).Methods("GET")
 	// s.Router.HandleFunc("/penyuluh", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.GetPenyuluhs))).Methods("GET")
-	s.Router.HandleFunc("/penyuluh/{id}", middlewares.SetMiddlewareJSON(s.GetUser)).Methods("GET")
-	s.Router.HandleFunc("/penyuluh/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.UpdateUser))).Methods("PUT")
-	s.Router.HandleFunc("/penyuluh/{id}", middlewares.SetMiddlewareAuthentication(s.DeleteUser)).Methods("DELETE")
+	s.Router.HandleFunc("/penyuluh/{id}", middlewares.SetMiddlewareJSON(s.GetPenyuluh)).Methods("GET")
+	// s.Router.HandleFunc("/penyuluh/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.UpdatePenyuluh))).Methods("PUT")
+	// s.Router.HandleFunc("/penyuluh/{id}", middlewares.SetMiddlewareAuthentication(s.DeletePenyuluh)).Methods("DELETE")
 
 	s.Router.HandleFunc("/changepassword/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.ChangePasswordUser))).Methods("PUT")
 
